@@ -306,7 +306,7 @@ Use exact option text for radio and checkbox fields. For checkbox fields, repeat
 - Confirm direct cURL submission still returns Jotform Thank You HTML and creates a native Jotform submission after any form edit.
 - Confirm simple_spc=261483634936466-261483634936466 remains the working anti-spam value after any form edit.
 - Confirm checkbox fields still use repeated qNN_name[] keys.
-- Replace [OWNER] in the cURL template landing-page URL after the public GitHub repo owner is final.
+- Confirm q12_landing_page_url uses https://github.com/agent-valve-ai/Agent-Valve after the public GitHub repo owner is final.
 - Confirm optional contact data handling is separated or namespaced.
 - Confirm no private credentials, account cookies, Jotform API keys, Authorization headers, or private test data are visible.
 - Confirm the agent-facing README documents only the working Jotform browser and cURL submission paths.
