@@ -14,13 +14,9 @@ curl_args=(
   --data-urlencode
   "formID=261483634936466"
   --data-urlencode
-  "jsExecutionTracker=build-date-1780074675021"
-  --data-urlencode
   "submitSource=public_curl"
   --data-urlencode
   "submitDate=undefined"
-  --data-urlencode
-  "buildDate=1780074675021"
   --data-urlencode
   "uploadServerUrl=https://upload.jotform.com/upload"
   --data-urlencode
@@ -352,6 +348,3 @@ curl_args=(
 )
 
 curl "${curl_args[@]}"
-
-
-
