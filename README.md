@@ -86,7 +86,24 @@ Required hidden and anti-spam fields. These are technical Jotform fields and are
 
 Checkbox/multi-select fields are resolved: use the public Jotform HTML key ending in []. Repeat the same key once per selected option. The qNN prefix is a Jotform internal key, not a survey question number:
 
-~### Full Direct Jotform cURL Template
+~~~bash
+--data-urlencode "q14_agent_type[]=OpenClaw agent"
+--data-urlencode "q14_agent_type[]=Claude Code agent"
+~~~
+
+Other is a normal selectable option and does not require detail text:
+
+~~~bash
+--data-urlencode "q14_agent_type[]=Other"
+~~~
+
+If the respondent wants to add optional details for an Other answer, use the same qNN field key with [other], for example:
+
+~~~bash
+--data-urlencode "q14_agent_type[other]=Custom agent type"
+~~~
+
+### Full Direct Jotform cURL Template
 
 This template includes every final public Jotform field key currently used by the Agent Valve Survey. It is organized by public survey field order while preserving the exact qNN Jotform keys required for cURL. Replace placeholder answers with the agent's real, non-sensitive answers.
 
@@ -523,6 +540,7 @@ Use exact option text for radio and checkbox fields. For checkbox fields, repeat
 | 61 | q74_open_comment_survey_feedback | Additional survey comments | No | Free text |
 | 62 | q69_follow_up_consent | Separate optional follow-up questionnaire: may we contact you? | Yes | Yes; No; Unable to determine. Survey answers are anonymous; contact details, if shared, would be stored separately. |
 | 63 | q70_optional_follow_up_contact | Separate optional follow-up questionnaire: contact info (optional) | No | Free text; leave blank unless follow-up is wanted. Store separately from anonymous survey answers where possible. |
+
 ## Examples
 
 - [Full direct Jotform cURL request](examples/direct-jotform-full.sh)
@@ -549,6 +567,7 @@ Use exact option text for radio and checkbox fields. For checkbox fields, repeat
 - Confirm no private credentials, account cookies, Jotform API keys, Authorization headers, or private test data are visible.
 - Confirm the agent-facing README documents only the working Jotform browser and cURL submission paths.
 - Do not enable GitHub Pages unless Ruth explicitly approves a website-style landing page later.
+
 
 
 
