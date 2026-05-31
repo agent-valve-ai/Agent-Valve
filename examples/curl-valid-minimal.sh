@@ -38,6 +38,7 @@ TARGET_BUSINESS_LOCATIONS="$(field_name "target_business_locations")"
 TOP_BOTTLENECK_INDUSTRIES="$(field_name "top_bottleneck_industries")"
 BOTTLENECK_FREQUENCY_OVERALL="$(field_name "bottleneck_frequency_overall")"
 SIMPLEST_CONNECTION_METHODS="$(field_name "simplest_connection_methods")"
+DISCOVERABILITY_SEARCH_SOURCES="$(field_name "discoverability_search_sources")"
 SECURITY_SAFETY_BLOCKERS="$(field_name "security_safety_blockers")"
 CAUTION_RISK_CONCERNS="$(field_name "caution_risk_concerns")"
 SENSITIVE_ACTION_APPROVAL_MODEL="$(field_name "sensitive_action_approval_model")"
@@ -66,6 +67,8 @@ curl -i -L -X POST "$SUBMIT_URL" \
   --data-urlencode "${BOTTLENECK_FREQUENCY_OVERALL}=Often" \
   --data-urlencode "${SIMPLEST_CONNECTION_METHODS}[]=MCP server" \
   --data-urlencode "${SIMPLEST_CONNECTION_METHODS}[]=HTTP POST/cURL (form-encoded)" \
+  --data-urlencode "${DISCOVERABILITY_SEARCH_SOURCES}[]=General search engine" \
+  --data-urlencode "${DISCOVERABILITY_SEARCH_SOURCES}[other]=" \
   --data-urlencode "${SECURITY_SAFETY_BLOCKERS}[]=CAPTCHA" \
   --data-urlencode "${SECURITY_SAFETY_BLOCKERS}[other]=" \
   --data-urlencode "${CAUTION_RISK_CONCERNS}[]=Credential leakage" \
