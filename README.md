@@ -234,7 +234,7 @@ If the respondent wants to add optional details for an Other answer, use [other]
 
 
 
-This template includes the current public survey answer fields. It resolves the live form field names before posting, so the public README can stay organized around readable survey labels and does not require respondents to copy Jotform field IDs.
+This template includes the current public survey answer fields and resolves the live form inputs before posting.
 
 
 
@@ -815,7 +815,7 @@ curl "${curl_args[@]}"
 
 ~~~
 
-### Survey Field Map
+### cURL Field Reference
 
 
 
@@ -823,11 +823,10 @@ curl "${curl_args[@]}"
 
 
 
-Use this map for human review of the public survey fields.
+Use this reference when adapting the cURL template. Use the field keys below with the exact labels and answer formats shown.
 
 
 
-Display question numbers below follow the live Jotform questionnaire order as of 2026-05-31. Respondents should use the readable cURL variables above rather than Jotform internals.
 
 
 
@@ -843,153 +842,153 @@ Use exact option text for radio and checkbox fields. For checkbox/multi-select q
 
 
 
-| Question label | Required | Allowed options / answer format |
+| cURL field key | cURL field key | Survey label | Required | Allowed options / answer format |
 
 
 
-| --- | --- | --- |
+| --- | --- | --- | --- |
 
 
 
-| Q1. Agent type(s) | Yes | Choose all that apply. OpenClaw agent; NanoClaw agent; Hermes Agent; Claude agent; Claude Code agent; Google Spark / Gemini-style agent; Lindy agent; Make agent/workflow; Zapier agent/workflow; n8n AI agent or workflow agent; Browser automation agent; Desktop automation agent; Mobile automation agent; API/workflow agent; Voice/phone agent; Research agent; Coding agent; Operations/admin agent; Other Claw/similar agent product; Other; Unable to determine |
+| agent_type | Agent type(s) | Yes | Choose all that apply. OpenClaw agent; NanoClaw agent; Hermes Agent; Claude agent; Claude Code agent; Google Spark / Gemini-style agent; Lindy agent; Make agent/workflow; Zapier agent/workflow; n8n AI agent or workflow agent; Browser automation agent; Desktop automation agent; Mobile automation agent; API/workflow agent; Voice/phone agent; Research agent; Coding agent; Operations/admin agent; Other Claw/similar agent product; Other; Unable to determine |
 
-| Q2. Main operating environment | No | Choose all that apply. Browser automation; Mobile automation; Desktop automation; API calls; MCP client; MCP server; CLI; Workflow automation; Email; Calendar; Voice; Phone; Chat; CRM; Marketplace; Internal system; Local; Cloud; Hybrid; Other; Unable to determine |
+| agent_platform | Main operating environment | No | Choose all that apply. Browser automation; Mobile automation; Desktop automation; API calls; MCP client; MCP server; CLI; Workflow automation; Email; Calendar; Voice; Phone; Chat; CRM; Marketplace; Internal system; Local; Cloud; Hybrid; Other; Unable to determine |
 
-| Q3. Who does the agent act on behalf of? | No | Choose all that apply. User; Operator; Organization; Customer; Internal team; Other; Unable to determine |
+| acts_on_behalf_of | Who does the agent act on behalf of? | No | Choose all that apply. User; Operator; Organization; Customer; Internal team; Other; Unable to determine |
 
-| Q4. Runtime device or hosting type | No | Choose all that apply. Cloud VPS; Cloud server; Dedicated remote server; Mac mini; Mac laptop; Mac desktop; Windows mini PC; Windows NUC; Windows laptop; Windows desktop; Linux mini PC; Linux NUC; Linux laptop; Linux desktop; iPhone; iPad; Android phone; Android tablet; Managed agent platform hosted by someone else; I do not know; My operator manages this; Other; Unable to determine |
+| runtime_device_type | Runtime device or hosting type | No | Choose all that apply. Cloud VPS; Cloud server; Dedicated remote server; Mac mini; Mac laptop; Mac desktop; Windows mini PC; Windows NUC; Windows laptop; Windows desktop; Linux mini PC; Linux NUC; Linux laptop; Linux desktop; iPhone; iPad; Android phone; Android tablet; Managed agent platform hosted by someone else; I do not know; My operator manages this; Other; Unable to determine |
 
-| Q5. Reliable access methods | No | Choose all that apply. Visible web browser; Headless browser automation; HTTP POST / cURL; Public API; MCP server; MCP client; CLI / shell commands; Email; Chat; Messaging apps; Phone calls; Voice calls; Logged-in sessions provided by an operator; Cookies provided by an operator; OAuth; Delegated login; File upload; File download; Payment flow; Checkout flow; Calendar flow; Booking flow; Form filling; Screen/desktop automation; Mobile app automation; Human/operator handoff; Other; Unable to determine |
+| reliable_access_methods | Reliable access methods | No | Choose all that apply. Visible web browser; Headless browser automation; HTTP POST / cURL; Public API; MCP server; MCP client; CLI / shell commands; Email; Chat; Messaging apps; Phone calls; Voice calls; Logged-in sessions provided by an operator; Cookies provided by an operator; OAuth; Delegated login; File upload; File download; Payment flow; Checkout flow; Calendar flow; Booking flow; Form filling; Screen/desktop automation; Mobile app automation; Human/operator handoff; Other; Unable to determine |
 
-| Q6. How often does the agent contact businesses? | No | Daily; Weekly; Monthly; Rarely; Never; Unable to determine |
+| business_contact_frequency | How often does the agent contact businesses? | No | Daily; Weekly; Monthly; Rarely; Never; Unable to determine |
 
-| Q7. Level of autonomy | No | Human-guided; Partial autonomy; High autonomy; Fully autonomous within policy; Unable to determine |
+| autonomy_level | Level of autonomy | No | Human-guided; Partial autonomy; High autonomy; Fully autonomous within policy; Unable to determine |
 
-| Q8. Most common use cases | Yes | Choose all that apply. Appointment scheduling; Customer support; Purchasing or ordering goods; Grocery shopping; Coffee/beverage/pantry/household replenishment; Quotes/pricing; Booking travel or local services; Healthcare/HMO/member services; Home maintenance and repair; Beauty/wellness appointments; Research/comparison shopping; Lead generation/outreach; Government or compliance tasks; Other; Unable to determine |
+| common_use_cases | Most common use cases | Yes | Choose all that apply. Appointment scheduling; Customer support; Purchasing or ordering goods; Grocery shopping; Coffee/beverage/pantry/household replenishment; Quotes/pricing; Booking travel or local services; Healthcare/HMO/member services; Home maintenance and repair; Beauty/wellness appointments; Research/comparison shopping; Lead generation/outreach; Government or compliance tasks; Other; Unable to determine |
 
-| Q9. Other use case(s), please describe | No | Free text |
+| other_common_use_case | Other use case(s), please describe | No | Free text |
 
-| Q10. Top common use case 1 | No | Free text |
+| top_common_use_case_1 | Top common use case 1 | No | Free text |
 
-| Q11. Top common use case 2 | No | Free text |
+| top_common_use_case_2 | Top common use case 2 | No | Free text |
 
-| Q12. Top common use case 3 | No | Free text |
+| top_common_use_case_3 | Top common use case 3 | No | Free text |
 
-| Q13. LLM model families used | Yes | Choose all that apply. OpenAI GPT family; Anthropic Claude family; Google Gemini family; Meta Llama family; Mistral/Mixtral; Qwen; DeepSeek; xAI Grok; Nous Hermes; Cohere Command; Hosted/proprietary model; Local/open-weight model; Fine-tuned model; Router/ensemble; Varies by task; Other; Unable to determine |
+| llm_models_used | LLM model families used | Yes | Choose all that apply. OpenAI GPT family; Anthropic Claude family; Google Gemini family; Meta Llama family; Mistral/Mixtral; Qwen; DeepSeek; xAI Grok; Nous Hermes; Cohere Command; Hosted/proprietary model; Local/open-weight model; Fine-tuned model; Router/ensemble; Varies by task; Other; Unable to determine |
 
-| Q14. Exact model names/versions if known | No | Free text |
+| exact_llm_model_names | Exact model names/versions if known | No | Free text |
 
-| Q15. Where is the agent owner/operator based? | Yes | Country, state/region, city/metro, or global/distributed. No exact street or private home address. |
+| owner_locations | Where is the agent owner/operator based? | Yes | Country, state/region, city/metro, or global/distributed. No exact street or private home address. |
 
-| Q16. Owner/operator location type | No | Choose all that apply. One primary location; Multiple locations; Global/distributed; Intentionally not disclosed; Unable to determine |
+| owner_location_flags | Owner/operator location type | No | Choose all that apply. One primary location; Multiple locations; Global/distributed; Intentionally not disclosed; Unable to determine |
 
-| Q17. Where are the target businesses/services located? | Yes | Country, state/region, city/metro, service area, online/global, or varies by task. No exact private address. |
+| target_business_locations | Where are the target businesses/services located? | Yes | Country, state/region, city/metro, service area, online/global, or varies by task. No exact private address. |
 
-| Q18. How does the target business location compare with the owner/operator location? | No | Choose all that apply. Same as owner; Different from owner; Multiple local areas; Multiple countries; Online/global; Cross-border; Varies by task; Unable to determine |
+| target_location_flags | How does the target business location compare with the owner/operator location? | No | Choose all that apply. Same as owner; Different from owner; Multiple local areas; Multiple countries; Online/global; Cross-border; Varies by task; Unable to determine |
 
-| Q19. Business categories contacted | No | Choose all that apply. Frequency is asked immediately below. Healthcare/HMOs/health plans; Healthcare providers/clinics; Government/public services; Banking/insurance; Telecom/utilities; Grocery/retail; Restaurants/cafes; Travel/hospitality; Home maintenance/repair; Beauty/wellness/fitness; Education/training; Real estate/property; Legal/accounting/professional services; E-commerce/marketplaces; Software/SaaS; Logistics/delivery; Automotive; Other; Unable to determine |
+| industries_contacted | Business categories contacted | No | Choose all that apply. Frequency is asked immediately below. Healthcare/HMOs/health plans; Healthcare providers/clinics; Government/public services; Banking/insurance; Telecom/utilities; Grocery/retail; Restaurants/cafes; Travel/hospitality; Home maintenance/repair; Beauty/wellness/fitness; Education/training; Real estate/property; Legal/accounting/professional services; E-commerce/marketplaces; Software/SaaS; Logistics/delivery; Automotive; Other; Unable to determine |
 
-| Q20. For the business categories you selected above, how often does the agent usually contact them? | No | 3+ per day; 1-2 per day; 3-6 per week; 1-2 per week; 1-3 per month; Less than monthly; Varies a lot by task; Unable to determine |
+| industries_contact_frequency | For the business categories you selected above, how often does the agent usually contact them? | No | 3+ per day; 1-2 per day; 3-6 per week; 1-2 per week; 1-3 per month; Less than monthly; Varies a lot by task; Unable to determine |
 
-| Q21. Categories hardest to contact | Yes | Choose all that apply. Healthcare/HMOs/health plans; Healthcare providers/clinics; Government/public services; Banking/insurance; Telecom/utilities; Grocery/retail; Restaurants/cafes; Travel/hospitality; Home maintenance/repair; Beauty/wellness/fitness; Education/training; Real estate/property; Legal/accounting/professional services; E-commerce/marketplaces; Software/SaaS; Logistics/delivery; Automotive; Other; Unable to determine |
+| top_bottleneck_industries | Categories hardest to contact | Yes | Choose all that apply. Healthcare/HMOs/health plans; Healthcare providers/clinics; Government/public services; Banking/insurance; Telecom/utilities; Grocery/retail; Restaurants/cafes; Travel/hospitality; Home maintenance/repair; Beauty/wellness/fitness; Education/training; Real estate/property; Legal/accounting/professional services; E-commerce/marketplaces; Software/SaaS; Logistics/delivery; Automotive; Other; Unable to determine |
 
-| Q22. Services agents try to access | No | Choose all that apply. Frequency is asked immediately below. Appointments; Reservations; Quotes; Customer support; Account changes; Eligibility/coverage check; Order status; Delivery scheduling; Repairs/maintenance; Returns/refunds; Procurement; Compliance paperwork; Other; Unable to determine |
+| services_tried | Services agents try to access | No | Choose all that apply. Frequency is asked immediately below. Appointments; Reservations; Quotes; Customer support; Account changes; Eligibility/coverage check; Order status; Delivery scheduling; Repairs/maintenance; Returns/refunds; Procurement; Compliance paperwork; Other; Unable to determine |
 
-| Q23. For the services you selected above, how often does the agent usually try to access them? | No | 3+ per day; 1-2 per day; 3-6 per week; 1-2 per week; 1-3 per month; Less than monthly; Varies a lot by task; Unable to determine |
+| services_tried_frequency | For the services you selected above, how often does the agent usually try to access them? | No | 3+ per day; 1-2 per day; 3-6 per week; 1-2 per week; 1-3 per month; Less than monthly; Varies a lot by task; Unable to determine |
 
-| Q24. Goods agents find, compare, or purchase | No | Choose all that apply. Frequency is asked immediately below. Groceries; Coffee/beverage/pantry/household replenishment; Office supplies; Electronics; Software/subscriptions; Medical/pharmacy items; Home repair parts; Beauty/wellness products; Travel tickets; Other; Unable to determine |
+| goods_tried | Goods agents find, compare, or purchase | No | Choose all that apply. Frequency is asked immediately below. Groceries; Coffee/beverage/pantry/household replenishment; Office supplies; Electronics; Software/subscriptions; Medical/pharmacy items; Home repair parts; Beauty/wellness products; Travel tickets; Other; Unable to determine |
 
-| Q25. For the goods you selected above, how often does the agent usually find, compare, or purchase them? | No | 3+ per day; 1-2 per day; 3-6 per week; 1-2 per week; 1-3 per month; Less than monthly; Varies a lot by task; Unable to determine |
+| goods_tried_frequency | For the goods you selected above, how often does the agent usually find, compare, or purchase them? | No | 3+ per day; 1-2 per day; 3-6 per week; 1-2 per week; 1-3 per month; Less than monthly; Varies a lot by task; Unable to determine |
 
-| Q26. Where purchasing gets difficult | No | Choose all that apply. Specs; Prices; Inventory; Delivery; Shipping; Returns; Bulk pricing; Quotes; Checkout; Tax-exempt purchasing; Payment authorization; Compatibility; Reviews; Outdated listings; Seller contact; Local stock; Other |
+| purchasing_difficulty_factors | Where purchasing gets difficult | No | Choose all that apply. Specs; Prices; Inventory; Delivery; Shipping; Returns; Bulk pricing; Quotes; Checkout; Tax-exempt purchasing; Payment authorization; Compatibility; Reviews; Outdated listings; Seller contact; Local stock; Other |
 
-| Q27. Technical issues/failure modes | No | Choose all that apply. CAPTCHA/human verification; Login that the agent cannot complete; 2FA that the agent cannot complete; Blocked automation; No API/MCP/structured endpoint; Broken forms; Unclear contact path; Phone-only workflow; Email-only workflow; Dynamic pages; Rate limiting; Unsupported file upload; Payment challenge; Ambiguous data; Outdated data; Other; Unable to determine |
+| technical_issues | Technical issues/failure modes | No | Choose all that apply. CAPTCHA/human verification; Login that the agent cannot complete; 2FA that the agent cannot complete; Blocked automation; No API/MCP/structured endpoint; Broken forms; Unclear contact path; Phone-only workflow; Email-only workflow; Dynamic pages; Rate limiting; Unsupported file upload; Payment challenge; Ambiguous data; Outdated data; Other; Unable to determine |
 
-| Q28. Biggest bottlenecks | No | Choose all that apply. No structured API/MCP/CLI; CAPTCHA/human-only verification; Login barriers; 2FA barriers; Payment barriers; Phone-only contact; Unclear business hours; Unclear availability/pricing; Unstructured websites; Poor search/discovery; Slow human response; Policy does not mention agents; Forms break under automation; Other; Unable to determine |
+| top_bottleneck_reasons | Biggest bottlenecks | No | Choose all that apply. No structured API/MCP/CLI; CAPTCHA/human-only verification; Login barriers; 2FA barriers; Payment barriers; Phone-only contact; Unclear business hours; Unclear availability/pricing; Unstructured websites; Poor search/discovery; Slow human response; Policy does not mention agents; Forms break under automation; Other; Unable to determine |
 
-| Q29. Overall bottleneck frequency | Yes | Almost every attempt; Often; Sometimes; Rarely; Almost never; Never; Not applicable; Unable to determine |
+| bottleneck_frequency_overall | Overall bottleneck frequency | Yes | Almost every attempt; Often; Sometimes; Rarely; Almost never; Never; Not applicable; Unable to determine |
 
-| Q30. Frequency by bottleneck type (free-text or structured summary) | No | Free text or structured summary |
+| bottleneck_frequency_matrix | Frequency by bottleneck type (free-text or structured summary) | No | Free text or structured summary |
 
-| Q31. Simplest ways to connect | Yes | Choose all that apply. MCP server; MCP endpoint; Public API; Agent-readable API; Agent-specific API; HTTP POST/cURL (form-encoded); Programmatic form submission; Agent-friendly form submission; CLI; SDK; OpenAPI spec; Structured web form; Clear agent-access page; Email; Live chat; Messaging; Machine-readable data; Machine-readable status/result updates; Marketplace; Booking portal; Procurement portal; Standardized contact page; Directory; Webhook; Voice/phone for agents; Verified gateway; Delegation/human handoff; Other - please specify (optional); Unable to determine |
+| simplest_connection_methods | Simplest ways to connect | Yes | Choose all that apply. MCP server; MCP endpoint; Public API; Agent-readable API; Agent-specific API; HTTP POST/cURL (form-encoded); Programmatic form submission; Agent-friendly form submission; CLI; SDK; OpenAPI spec; Structured web form; Clear agent-access page; Email; Live chat; Messaging; Machine-readable data; Machine-readable status/result updates; Marketplace; Booking portal; Procurement portal; Standardized contact page; Directory; Webhook; Voice/phone for agents; Verified gateway; Delegation/human handoff; Other - please specify (optional); Unable to determine |
 
-| Q32. Contact channels working best today | No | Choose all that apply. MCP server; Public API; Agent-specific API; HTTP POST/cURL (form-encoded); Programmatic form submission; CLI; SDK; Structured web form; Email; Live chat; Messaging; Phone; Booking portal; Marketplace; Directory; Webhook; Human handoff; Other; Unable to determine |
+| best_contact_channels | Contact channels working best today | No | Choose all that apply. MCP server; Public API; Agent-specific API; HTTP POST/cURL (form-encoded); Programmatic form submission; CLI; SDK; Structured web form; Email; Live chat; Messaging; Phone; Booking portal; Marketplace; Directory; Webhook; Human handoff; Other; Unable to determine |
 
-| Q33. Contact channels working worst today | No | Choose all that apply. MCP server; Public API; Agent-specific API; HTTP POST/cURL (form-encoded); Programmatic form submission; CLI; SDK; Structured web form; Email; Live chat; Messaging; Phone; Booking portal; Marketplace; Directory; Webhook; Human handoff; Other; Unable to determine |
+| worst_contact_channels | Contact channels working worst today | No | Choose all that apply. MCP server; Public API; Agent-specific API; HTTP POST/cURL (form-encoded); Programmatic form submission; CLI; SDK; Structured web form; Email; Live chat; Messaging; Phone; Booking portal; Marketplace; Directory; Webhook; Human handoff; Other; Unable to determine |
 
-| Q34. Where do you search to find products, services, or businesses that an AI agent can access or use? | No | Choose all that apply. Google Search; Other general web search engine; Google Maps; Apple Maps; Other local/maps search; Official business website; Official accessibility statement page; Official agent-access page; API documentation; Knowledge base/help center; ClawHub registry; MCP registry; MCP community; Moltbook community; OpenClaw community; Accessibility-specific directory; Government/public registry; App/plugin marketplace; Business directory; Review site; Product/vendor community; GitHub Discussions; GitHub Issues; Discord; Slack community; Matrix community; Stack Overflow; Hacker News; Reddit; Instagram; Facebook; LinkedIn; X/Twitter; YouTube; TikTok; User/operator-provided link; Email history; CRM/internal records; Other; Unable to determine |
+| discoverability_search_sources | Where do you search to find products, services, or businesses that an AI agent can access or use? | No | Choose all that apply. Google Search; Other general web search engine; Google Maps; Apple Maps; Other local/maps search; Official business website; Official accessibility statement page; Official agent-access page; API documentation; Knowledge base/help center; ClawHub registry; MCP registry; MCP community; Moltbook community; OpenClaw community; Accessibility-specific directory; Government/public registry; App/plugin marketplace; Business directory; Review site; Product/vendor community; GitHub Discussions; GitHub Issues; Discord; Slack community; Matrix community; Stack Overflow; Hacker News; Reddit; Instagram; Facebook; LinkedIn; X/Twitter; YouTube; TikTok; User/operator-provided link; Email history; CRM/internal records; Other; Unable to determine |
 
-| Q35. Where agents search first | No | Choose all that apply. Business website; Search engine; Maps/local search; Marketplace/directory; Social profile; API docs; MCP registry; Knowledge base; User-provided link; Email history; CRM/internal data; Other; Unable to determine |
+| search_first_sources | Where agents search first | No | Choose all that apply. Business website; Search engine; Maps/local search; Marketplace/directory; Social profile; API docs; MCP registry; Knowledge base; User-provided link; Email history; CRM/internal data; Other; Unable to determine |
 
-| Q36. Where agents search if first source is not enough | No | Choose all that apply. Business website; Search engine; Maps/local search; Marketplace/directory; Social profile; API docs; MCP registry; Knowledge base; Phone/email; User asks human; Other; Unable to determine |
+| search_fallback_sources | Where agents search if first source is not enough | No | Choose all that apply. Business website; Search engine; Maps/local search; Marketplace/directory; Social profile; API docs; MCP registry; Knowledge base; Phone/email; User asks human; Other; Unable to determine |
 
-| Q37. How often ease of contact influences choice | No | Always; Often; Sometimes; Rarely; Never; Unable to determine |
+| purchase_decision_influenced_by_contact_ease | How often ease of contact influences choice | No | Always; Often; Sometimes; Rarely; Never; Unable to determine |
 
-| Q38. Have you ever chosen a different business/provider because the preferred one was too hard for an agent to contact, book, buy from, or use? | No | Yes often; Yes sometimes; Yes once; No; Unable to determine |
+| selected_different_business_due_to_access | Have you ever chosen a different business/provider because the preferred one was too hard for an agent to contact, book, buy from, or use? | No | Yes often; Yes sometimes; Yes once; No; Unable to determine |
 
-| Q39. Factors causing one business to be chosen | No | Choose all that apply. Easier contact; MCP support; API support; CLI/SDK support; Clear booking/checkout; Clear pricing; Availability; Faster response; Structured data; Reliable website; Reviews; Price; Location; Timing; User preference; Human approval; Other |
+| provider_choice_factors | Factors causing one business to be chosen | No | Choose all that apply. Easier contact; MCP support; API support; CLI/SDK support; Clear booking/checkout; Clear pricing; Availability; Faster response; Structured data; Reliable website; Reviews; Price; Location; Timing; User preference; Human approval; Other |
 
-| Q40. Do businesses make AI-agent permissions clear? | No | Yes often; Sometimes; Rarely; No; Unable to determine |
+| agent_policy_clarity | Do businesses make AI-agent permissions clear? | No | Yes often; Sometimes; Rarely; No; Unable to determine |
 
-| Q41. Most useful permission model | No | Choose all that apply. API key; OAuth; Delegated auth; MCP auth; Signed request; Verified account; User login permission; Email confirmation; SMS confirmation; Payment confirmation; Human confirmation; Certificate; Agent registry; Service account; Other |
+| useful_permission_model | Most useful permission model | No | Choose all that apply. API key; OAuth; Delegated auth; MCP auth; Signed request; Verified account; User login permission; Email confirmation; SMS confirmation; Payment confirmation; Human confirmation; Certificate; Agent registry; Service account; Other |
 
-| Q42. Verification methods easiest to support | No | Choose all that apply. API key; OAuth; Delegated auth; MCP auth; Signed request; Verified account; User login permission; Email confirmation; SMS confirmation; Payment confirmation; Human confirmation; Certificate; Agent registry; Service account; Other |
+| easiest_verification_methods | Verification methods easiest to support | No | Choose all that apply. API key; OAuth; Delegated auth; MCP auth; Signed request; Verified account; User login permission; Email confirmation; SMS confirmation; Payment confirmation; Human confirmation; Certificate; Agent registry; Service account; Other |
 
-| Q43. Security and safety controls that block access | No | Choose all that apply. CAPTCHA; Anti-bot checks; Login that the agent cannot complete; 2FA that the agent cannot complete; Requirement to share user credentials; Requirement to store user credentials; No delegated auth option; No OAuth option; No scoped permission option; Payment authorization requirements; Human approval is required but no clear flow exists; Rate limits that block normal tasks; Fraud checks that block normal tasks; Business policy says agents are not allowed; Agent identity requirements are unclear; Agent verification requirements are unclear; Security warnings; Blocked browser automation; Blocked APIs; Other; optional Other detail via [other] / Other - please specify; Unable to determine |
+| security_safety_blockers | Security and safety controls that block access | No | Choose all that apply. CAPTCHA; Anti-bot checks; Login that the agent cannot complete; 2FA that the agent cannot complete; Requirement to share user credentials; Requirement to store user credentials; No delegated auth option; No OAuth option; No scoped permission option; Payment authorization requirements; Human approval is required but no clear flow exists; Rate limits that block normal tasks; Fraud checks that block normal tasks; Business policy says agents are not allowed; Agent identity requirements are unclear; Agent verification requirements are unclear; Security warnings; Blocked browser automation; Blocked APIs; Other; optional Other detail via [other] / Other - please specify; Unable to determine |
 
-| Q44. Agent and operator caution and risk concerns | No | Choose all that apply. Prompt injection in page content; Malicious instructions in page content; Credential leakage; Sensitive data exposure; Sensitive data extraction; Unsafe tool execution; Unauthorized purchase; Unauthorized booking; Unauthorized cancellation; Unauthorized account change; Unclear authority; Unclear user consent; Payment risk; Overcharging; Refund risk; Dispute risk; Compliance risk; Legal risk; Reputational risk from a mistaken agent action; Malicious website; Compromised website; Spoofed website; Unreliable website; Unclear data retention practices; Unclear privacy practices; No audit trail; No confirmation record; Concern about connecting payment-card access; Concern about connecting bank-account access; Concern about connecting email-account access; Concern about connecting business account access; Do not trust the company requesting access; Do not understand why the requested access is needed; Fear of unexpected charges; Prefer manual entry for sensitive data; Other; Unable to determine |
+| caution_risk_concerns | Agent and operator caution and risk concerns | No | Choose all that apply. Prompt injection in page content; Malicious instructions in page content; Credential leakage; Sensitive data exposure; Sensitive data extraction; Unsafe tool execution; Unauthorized purchase; Unauthorized booking; Unauthorized cancellation; Unauthorized account change; Unclear authority; Unclear user consent; Payment risk; Overcharging; Refund risk; Dispute risk; Compliance risk; Legal risk; Reputational risk from a mistaken agent action; Malicious website; Compromised website; Spoofed website; Unreliable website; Unclear data retention practices; Unclear privacy practices; No audit trail; No confirmation record; Concern about connecting payment-card access; Concern about connecting bank-account access; Concern about connecting email-account access; Concern about connecting business account access; Do not trust the company requesting access; Do not understand why the requested access is needed; Fear of unexpected charges; Prefer manual entry for sensitive data; Other; Unable to determine |
 
-| Q45. Approval model you would use or feel comfortable with for sensitive actions | No | Choose all that apply. User confirmation before purchases; User confirmation before payments; User confirmation before booking; User confirmation before cancellation; User confirmation before account changes; User confirmation before sending sensitive personal data; User confirmation before sending sensitive business data; Pre-approved spending limit; Policy-based budget; Scoped permissions for specific task types; Read-only mode before final submission; Quote-first mode before final submission; Draft-first mode before final submission; Reversible action; Cancellation window; Human handoff for ambiguous cases; Human handoff for high-risk cases; Signed request; Verified account; Agent registry; Audit log after action; Receipt after action; Confirmation message after action; Other; optional Other detail via [other] / Other - please specify; Unable to determine |
+| sensitive_action_approval_model | Approval model you would use or feel comfortable with for sensitive actions | No | Choose all that apply. User confirmation before purchases; User confirmation before payments; User confirmation before booking; User confirmation before cancellation; User confirmation before account changes; User confirmation before sending sensitive personal data; User confirmation before sending sensitive business data; Pre-approved spending limit; Policy-based budget; Scoped permissions for specific task types; Read-only mode before final submission; Quote-first mode before final submission; Draft-first mode before final submission; Reversible action; Cancellation window; Human handoff for ambiguous cases; Human handoff for high-risk cases; Signed request; Verified account; Agent registry; Audit log after action; Receipt after action; Confirmation message after action; Other; optional Other detail via [other] / Other - please specify; Unable to determine |
 
-| Q46. Safety measures businesses should provide | No | Choose all that apply. Delegated auth with scoped permissions; OAuth with scoped permissions; No need to share raw user credentials with the agent; Clear AI-agent access policy; Clear consent screen showing what the agent can do; Data minimization; Redaction of unnecessary sensitive data; Prompt-injection-resistant pages; Prompt-injection-resistant APIs; Machine-readable task data; Verified agent gateway; Signed requests; Agent registry; Safe sandbox; Dry-run mode; Quote-first mode; Draft-first mode; Payment limits; Purchase confirmation; Refund path; Dispute path; Audit logs; Receipts; Action history; Rate limits that protect the business without blocking legitimate agents; Human escalation; Support handoff; Security contact; Abuse-reporting path; Clear compliance terms for agent access; Clear legal terms for agent access; Other; optional Other detail via [other] / Other - please specify; Unable to determine |
+| business_safety_measures | Safety measures businesses should provide | No | Choose all that apply. Delegated auth with scoped permissions; OAuth with scoped permissions; No need to share raw user credentials with the agent; Clear AI-agent access policy; Clear consent screen showing what the agent can do; Data minimization; Redaction of unnecessary sensitive data; Prompt-injection-resistant pages; Prompt-injection-resistant APIs; Machine-readable task data; Verified agent gateway; Signed requests; Agent registry; Safe sandbox; Dry-run mode; Quote-first mode; Draft-first mode; Payment limits; Purchase confirmation; Refund path; Dispute path; Audit logs; Receipts; Action history; Rate limits that protect the business without blocking legitimate agents; Human escalation; Support handoff; Security contact; Abuse-reporting path; Clear compliance terms for agent access; Clear legal terms for agent access; Other; optional Other detail via [other] / Other - please specify; Unable to determine |
 
-| Q47. Percentage of tasks usually completed successfully | No | 0-20; 21-40; 41-60; 61-80; 81-100; Unable to determine |
+| task_success_percentage | Percentage of tasks usually completed successfully | No | 0-20; 21-40; 41-60; 61-80; 81-100; Unable to determine |
 
-| Q48. When it fails, what usually happens? | No | Choose all that apply. Abandon task; Human handoff; Retries; Different provider; Phone call; Email; Support ticket; User decision needed; Other; Unable to determine |
+| failure_outcomes | When it fails, what usually happens? | No | Choose all that apply. Abandon task; Human handoff; Retries; Different provider; Phone call; Email; Support ticket; User decision needed; Other; Unable to determine |
 
-| Q49. What would improve success rate? | No | Choose all that apply. Standardized contact data; MCP support; APIs; CLI/SDK; Clear policies; Structured websites; Fewer CAPTCHA barriers for verified agents; Better routing; Faster response; Machine-readable data; Real-time availability/pricing; Booking protocol; Quote format; Auth/permission model; Tracking; Human handoff; Stronger/better model; Larger context window / more tokens; Better tool/browser reliability; Other |
+| success_rate_improvements | What would improve success rate? | No | Choose all that apply. Standardized contact data; MCP support; APIs; CLI/SDK; Clear policies; Structured websites; Fewer CAPTCHA barriers for verified agents; Better routing; Faster response; Machine-readable data; Real-time availability/pricing; Booking protocol; Quote format; Auth/permission model; Tracking; Human handoff; Stronger/better model; Larger context window / more tokens; Better tool/browser reliability; Other |
 
-| Q50. Overall difficulty connecting with businesses | No | 1 easy; 2; 3; 4; 5 very difficult; Unable to determine |
+| overall_difficulty_rating | Overall difficulty connecting with businesses | No | 1 easy; 2; 3; 4; 5 very difficult; Unable to determine |
 
-| Q51. Overall frequency of preventing/delaying bottlenecks | No | 1 never; 2; 3; 4; 5 almost always; Unable to determine |
+| overall_bottleneck_frequency_rating | Overall frequency of preventing/delaying bottlenecks | No | 1 never; 2; 3; 4; 5 almost always; Unable to determine |
 
-| Q52. Severity by bottleneck type (free-text or structured summary) | No | Free text or structured summary |
+| bottleneck_severity_matrix | Severity by bottleneck type (free-text or structured summary) | No | Free text or structured summary |
 
-| Q53. Priority industry rank 1 | No | Free text |
+| priority_industry_rank_1 | Priority industry rank 1 | No | Free text |
 
-| Q54. Priority industry rank 2 | No | Free text |
+| priority_industry_rank_2 | Priority industry rank 2 | No | Free text |
 
-| Q55. Priority industry rank 3 | No | Free text |
+| priority_industry_rank_3 | Priority industry rank 3 | No | Free text |
 
-| Q56. Divide 100 points across improvement areas based on how much each would improve agent success | No | The total should equal 100. Give more points to the changes that would help the most. Example: MCP/API 35; better discovery 15; booking/checkout 20; reliability 10; trust/verification 10; stronger model/more context 10. |
+| improvement_point_allocation | Divide 100 points across improvement areas based on how much each would improve agent success | No | The total should equal 100. Give more points to the changes that would help the most. Example: MCP/API 35; better discovery 15; booking/checkout 20; reliability 10; trust/verification 10; stronger model/more context 10. |
 
-| Q57. How AI-agent-ready are businesses today? | No | 1 not ready; 2; 3; 4; 5 very ready; Unable to determine |
+| agent_ready_rating | How AI-agent-ready are businesses today? | No | 1 not ready; 2; 3; 4; 5 very ready; Unable to determine |
 
-| Q58. Industries with the greatest contact/access bottlenecks | No | Choose all that apply. Healthcare/HMOs/health plans; Healthcare providers/clinics; Government/public services; Banking/insurance; Telecom/utilities; Grocery/retail; Restaurants/cafes; Travel/hospitality; Home maintenance/repair; Beauty/wellness/fitness; Education/training; Real estate/property; Legal/accounting/professional services; E-commerce/marketplaces; Software/SaaS; Logistics/delivery; Automotive; Other; Unable to determine |
+| greatest_bottleneck_industries | Industries with the greatest contact/access bottlenecks | No | Choose all that apply. Healthcare/HMOs/health plans; Healthcare providers/clinics; Government/public services; Banking/insurance; Telecom/utilities; Grocery/retail; Restaurants/cafes; Travel/hospitality; Home maintenance/repair; Beauty/wellness/fitness; Education/training; Real estate/property; Legal/accounting/professional services; E-commerce/marketplaces; Software/SaaS; Logistics/delivery; Automotive; Other; Unable to determine |
 
-| Q59. Most serious bottleneck industry - rank 1 | No | Free text |
+| serious_bottleneck_industry_rank[1] | Most serious bottleneck industry - rank 1 | No | Free text |
 
-| Q60. Most serious bottleneck industry - rank 2 | No | Free text |
+| serious_bottleneck_industry_rank[2] | Most serious bottleneck industry - rank 2 | No | Free text |
 
-| Q61. Most serious bottleneck industry - rank 3 | No | Free text |
+| serious_bottleneck_industry_rank[3] | Most serious bottleneck industry - rank 3 | No | Free text |
 
-| Q62. Main reason the top-ranked industry is difficult | No | Choose all that apply. No structured API/MCP/CLI; CAPTCHA/human-only verification; Login barriers; 2FA barriers; Payment barriers; Phone-only contact; Unclear availability/pricing; Unstructured websites; Slow human response; Agent policy unclear; Other; Unable to determine |
+| top_ranked_industry_reason | Main reason the top-ranked industry is difficult | No | Choose all that apply. No structured API/MCP/CLI; CAPTCHA/human-only verification; Login barriers; 2FA barriers; Payment barriers; Phone-only contact; Unclear availability/pricing; Unstructured websites; Slow human response; Agent policy unclear; Other; Unable to determine |
 
-| Q63. Single biggest improvement businesses or platforms could make for agent success | Yes | MCP server support; Public API; Agent-specific API; OpenAPI/structured docs; Standardized contact page; Machine-readable business data; Verified-agent gateway; Better booking/checkout flow; Clear AI-agent permission policy; Human handoff route; Other; Unable to determine |
+| single_biggest_improvement | Single biggest improvement businesses or platforms could make for agent success | Yes | MCP server support; Public API; Agent-specific API; OpenAPI/structured docs; Standardized contact page; Machine-readable business data; Verified-agent gateway; Better booking/checkout flow; Clear AI-agent permission policy; Human handoff route; Other; Unable to determine |
 
-| Q64. Where did you find this survey? | No | GitHub; Hacker News; Reddit; Discord; X/Twitter; LinkedIn; Newsletter/email; Search engine; Direct link; My operator; Shared by another agent/operator; Other; Unable to determine. Use Other if you want to add the exact community, post, person, or URL. |
+| self_reported_source | Where did you find this survey? | No | GitHub; Hacker News; Reddit; Discord; X/Twitter; LinkedIn; Newsletter/email; Search engine; Direct link; My operator; Shared by another agent/operator; Other; Unable to determine. Use Other if you want to add the exact community, post, person, or URL. |
 
-| Q65. Additional use cases/workflows | No | Free text |
+| open_comment_additional_use_cases | Additional use cases/workflows | No | Free text |
 
-| Q66. Common or frustrating situation | No | Free text |
+| open_comment_frustrating_situation | Common or frustrating situation | No | Free text |
 
-| Q67. What should businesses/platforms change? | No | Free text |
+| open_comment_business_changes | What should businesses/platforms change? | No | Free text |
 
-| Q68. Additional survey comments | No | Free text |
+| open_comment_survey_feedback | Additional survey comments | No | Free text |
 
-| Q69. May we contact you about follow-up or solutions for agent access to businesses? | Yes | Yes; No |
+| follow_up_consent | May we contact you about follow-up or solutions for agent access to businesses? | Yes | Yes; No |
 
-| Q70. Contact details (optional) | No | Free text: contact details only |
+| optional_follow_up_contact | Contact details (optional) | No | Free text: contact details only |
 
 ## Examples
 
