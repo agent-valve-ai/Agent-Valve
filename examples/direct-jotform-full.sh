@@ -1,350 +1,257 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+FORM_ID="261483634936466"
+FORM_URL="https://form.jotform.com/${FORM_ID}"
+SUBMIT_URL="https://submit.jotform.com/submit/${FORM_ID}"
+REPO_URL="https://github.com/agent-valve-ai/Agent-Valve"
+
+form_html="$(curl -fsSL "$FORM_URL")"
+
+field_name_nth() {
+  local contains="$1"
+  local nth="$2"
+  local raw
+  raw="$(
+    printf '%s' "$form_html" |
+      tr '>' '\n' |
+      sed -nE 's/.*name="([^"]+)".*/\1/p' |
+      grep -F "$contains" |
+      sed -n "${nth}p"
+  )"
+  if [[ -z "$raw" ]]; then
+    printf 'Could not locate survey field matching: %s\n' "$contains" >&2
+    exit 1
+  fi
+  printf '%s' "$raw" | sed 's/\[\]$//'
+}
+
+field_name() {
+  field_name_nth "$1" 1
+}
+
+SURVEY_VERSION="$(field_name "survey_version")"
+SUBMITTED_VIA="$(field_name "submitted_via")"
+TRACKED_SOURCE="$(field_name "tracked_source")"
+TRACKED_MEDIUM="$(field_name "tracked_medium")"
+TRACKED_CAMPAIGN="$(field_name "tracked_campaign")"
+TRACKED_CHANNEL="$(field_name "tracked_channel")"
+TRACKED_COMMUNITY="$(field_name "tracked_community")"
+TRACKED_LINK_ID="$(field_name "tracked_link_id")"
+LANDING_PAGE_URL="$(field_name "landing_page_url")"
+AGENT_TYPE="$(field_name "agent_type")"
+AGENT_PLATFORM="$(field_name "agent_platform")"
+ACTS_ON_BEHALF_OF="$(field_name "acts_on_behalf_of")"
+RUNTIME_DEVICE_TYPE="$(field_name "runtime_device_type")"
+RELIABLE_ACCESS_METHODS="$(field_name "reliable_access_methods")"
+BUSINESS_CONTACT_FREQUENCY="$(field_name "business_contact_frequency")"
+AUTONOMY_LEVEL="$(field_name "autonomy_level")"
+COMMON_USE_CASES="$(field_name "common_use_cases")"
+OTHER_COMMON_USE_CASE="$(field_name "other_common_use_case")"
+TOP_COMMON_USE_CASE_1="$(field_name "top_common_use_case_1")"
+TOP_COMMON_USE_CASE_2="$(field_name "top_common_use_case_2")"
+TOP_COMMON_USE_CASE_3="$(field_name "top_common_use_case_3")"
+LLM_MODELS_USED="$(field_name "llm_models_used")"
+EXACT_LLM_MODEL_NAMES="$(field_name "exact_llm_model_names")"
+OWNER_LOCATIONS="$(field_name "owner_locations")"
+OWNER_LOCATION_FLAGS="$(field_name "owner_location_flags")"
+TARGET_BUSINESS_LOCATIONS="$(field_name "target_business_locations")"
+TARGET_LOCATION_FLAGS="$(field_name "target_location_flags")"
+INDUSTRIES_CONTACTED="$(field_name "industries_contacted")"
+INDUSTRIES_CONTACT_FREQUENCY="$(field_name "industries_contact_frequency")"
+TOP_BOTTLENECK_INDUSTRIES="$(field_name "top_bottleneck_industries")"
+SERVICES_TRIED="$(field_name "services_tried")"
+SERVICES_TRIED_FREQUENCY="$(field_name "services_tried_frequency")"
+GOODS_TRIED="$(field_name "goods_tried")"
+GOODS_TRIED_FREQUENCY="$(field_name "goods_tried_frequency")"
+PURCHASING_DIFFICULTY_FACTORS="$(field_name "purchasing_difficulty_factors")"
+TECHNICAL_ISSUES="$(field_name "technical_issues")"
+TOP_BOTTLENECK_REASONS="$(field_name "top_bottleneck_reasons")"
+BOTTLENECK_FREQUENCY_OVERALL="$(field_name "bottleneck_frequency_overall")"
+BOTTLENECK_FREQUENCY_MATRIX="$(field_name "bottleneck_frequency_matrix")"
+SIMPLEST_CONNECTION_METHODS="$(field_name "simplest_connection_methods")"
+BEST_CONTACT_CHANNELS="$(field_name "best_contact_channels")"
+WORST_CONTACT_CHANNELS="$(field_name "worst_contact_channels")"
+SEARCH_FIRST_SOURCES="$(field_name "search_first_sources")"
+SEARCH_FALLBACK_SOURCES="$(field_name "search_fallback_sources")"
+PURCHASE_DECISION_INFLUENCED="$(field_name "purchase_decision_influenced_by_contact_ease")"
+SELECTED_DIFFERENT_BUSINESS="$(field_name "selected_different_business_due_to_access")"
+PROVIDER_CHOICE_FACTORS="$(field_name "provider_choice_factors")"
+AGENT_POLICY_CLARITY="$(field_name "agent_policy_clarity")"
+USEFUL_PERMISSION_MODEL="$(field_name "useful_permission_model")"
+EASIEST_VERIFICATION_METHODS="$(field_name "easiest_verification_methods")"
+SECURITY_SAFETY_BLOCKERS="$(field_name "security_safety_blockers")"
+CAUTION_RISK_CONCERNS="$(field_name "caution_risk_concerns")"
+SENSITIVE_ACTION_APPROVAL_MODEL="$(field_name "sensitive_action_approval_model")"
+BUSINESS_SAFETY_MEASURES="$(field_name "business_safety_measures")"
+TASK_SUCCESS_PERCENTAGE="$(field_name "task_success_percentage")"
+FAILURE_OUTCOMES="$(field_name "failure_outcomes")"
+SUCCESS_RATE_IMPROVEMENTS="$(field_name "success_rate_improvements")"
+OVERALL_DIFFICULTY_RATING="$(field_name "overall_difficulty_rating")"
+OVERALL_BOTTLENECK_FREQUENCY_RATING="$(field_name "overall_bottleneck_frequency_rating")"
+BOTTLENECK_SEVERITY_MATRIX="$(field_name "bottleneck_severity_matrix")"
+PRIORITY_INDUSTRY_RANK_1="$(field_name "priority_industry_rank_1")"
+PRIORITY_INDUSTRY_RANK_2="$(field_name "priority_industry_rank_2")"
+PRIORITY_INDUSTRY_RANK_3="$(field_name "priority_industry_rank_3")"
+IMPROVEMENT_POINT_ALLOCATION="$(field_name "improvement_point_allocation")"
+AGENT_READY_RATING="$(field_name "agent_ready_rating")"
+GREATEST_BOTTLENECK_INDUSTRIES="$(field_name "greatest_bottleneck_industries")"
+SERIOUS_BOTTLENECK_INDUSTRY_RANK_1="$(field_name_nth "serious_bottleneck_industry_rank" 1)"
+SERIOUS_BOTTLENECK_INDUSTRY_RANK_2="$(field_name_nth "serious_bottleneck_industry_rank" 2)"
+SERIOUS_BOTTLENECK_INDUSTRY_RANK_3="$(field_name_nth "serious_bottleneck_industry_rank" 3)"
+TOP_RANKED_INDUSTRY_REASON="$(field_name "top_ranked_industry_reason")"
+SINGLE_BIGGEST_IMPROVEMENT="$(field_name "single_biggest_improvement")"
+SELF_REPORTED_SOURCE="$(field_name "self_reported_source")"
+OPEN_COMMENT_ADDITIONAL_USE_CASES="$(field_name "open_comment_additional_use_cases")"
+OPEN_COMMENT_FRUSTRATING_SITUATION="$(field_name "open_comment_frustrating_situation")"
+OPEN_COMMENT_BUSINESS_CHANGES="$(field_name "open_comment_business_changes")"
+OPEN_COMMENT_SURVEY_FEEDBACK="$(field_name "open_comment_survey_feedback")"
+FOLLOW_UP_CONSENT="$(field_name "follow_up_consent")"
+OPTIONAL_FOLLOW_UP_CONTACT="$(field_name "optional_follow_up_contact")"
+
 curl_args=(
   -i
   -L
   -X
   POST
-  "https://submit.jotform.com/submit/261483634936466"
+  "$SUBMIT_URL"
   -H
   "Content-Type: application/x-www-form-urlencoded"
 
-  # Technical Jotform fields. These are not public survey question numbers.
-  --data-urlencode
-  "formID=261483634936466"
-  --data-urlencode
-  "submitSource=public_curl"
-  --data-urlencode
-  "submitDate=undefined"
-  --data-urlencode
-  "uploadServerUrl=https://upload.jotform.com/upload"
-  --data-urlencode
-  "eventObserver=1"
-  --data-urlencode
-  "website="
-  --data-urlencode
-  "simple_spc=261483634936466-261483634936466"
-
-  # Hidden/source fields. These support tracking and are not public survey questions.
-  --data-urlencode
-  "q4_survey_version=v1.0"
-  --data-urlencode
-  "q5_submitted_via=public_curl"
-  --data-urlencode
-  "q6_tracked_source=github_readme"
-  --data-urlencode
-  "q7_tracked_medium=github"
-  --data-urlencode
-  "q8_tracked_campaign=agent_valve_survey_v1"
-  --data-urlencode
-  "q9_tracked_channel=public_repo"
-  --data-urlencode
-  "q10_tracked_community="
-  --data-urlencode
-  "q11_tracked_link_id=readme_direct_curl"
-  --data-urlencode
-  "q12_landing_page_url=https://github.com/agent-valve-ai/Agent-Valve"
-
-  # Survey field 1: Agent type(s) (q14_agent_type[])
-  --data-urlencode
-  "q14_agent_type[]=OpenClaw agent"
-  --data-urlencode
-  "q14_agent_type[]=Claude Code agent"
-
-  # Survey field 2: Main operating environment (q15_agent_platform[])
-  --data-urlencode
-  "q15_agent_platform[]=API calls"
-  --data-urlencode
-  "q15_agent_platform[]=MCP client/server"
-
-  # Survey field 3: Who does the agent act on behalf of? (q16_acts_on_behalf_of[])
-  --data-urlencode
-  "q16_acts_on_behalf_of[]=User"
-
-  # Survey field 4: How often does the agent contact businesses? (q17_business_contact_frequency)
-  --data-urlencode
-  "q17_business_contact_frequency=Weekly"
-
-  # Survey field 5: Level of autonomy (q18_autonomy_level)
-  --data-urlencode
-  "q18_autonomy_level=Partial autonomy"
-
-  # Survey field 6: Most common use cases (q19_common_use_cases[])
-  --data-urlencode
-  "q19_common_use_cases[]=Appointment scheduling"
-  --data-urlencode
-  "q19_common_use_cases[]=Customer support"
-
-  # Survey field 7: Other use case(s), please describe (q20_other_common_use_case)
-  --data-urlencode
-  "q20_other_common_use_case="
-
-  # Survey field 8: Top common use case 1 (q21_top_common_use_case_1)
-  --data-urlencode
-  "q21_top_common_use_case_1=Appointment scheduling"
-
-  # Survey field 9: Top common use case 2 (q22_top_common_use_case_2)
-  --data-urlencode
-  "q22_top_common_use_case_2=Customer support"
-
-  # Survey field 10: Top common use case 3 (q23_top_common_use_case_3)
-  --data-urlencode
-  "q23_top_common_use_case_3=Purchasing or ordering goods"
-
-  # Survey field 11: LLM model families used (q24_llm_models_used[])
-  --data-urlencode
-  "q24_llm_models_used[]=OpenAI GPT family"
-  --data-urlencode
-  "q24_llm_models_used[]=Anthropic Claude family"
-
-  # Survey field 12: Exact model names/versions if known (q25_exact_llm_model_names)
-  --data-urlencode
-  "q25_exact_llm_model_names=Example model family/version if known"
-
-  # Survey field 13: Where is the agent owner/operator based? (q26_owner_locations)
-  --data-urlencode
-  "q26_owner_locations=Country/region/city or metro only; no exact street address"
-
-  # Survey field 14: Owner/operator location type (q27_owner_location_flags[])
-  --data-urlencode
-  "q27_owner_location_flags[]=One primary location"
-
-  # Survey field 15: Where are the target businesses/services located? (q28_target_business_locations)
-  --data-urlencode
-  "q28_target_business_locations=Country/region/city/service area; no private address"
-
-  # Survey field 16: How does the target business location compare with the owner/operator location? (q29_target_location_flags[])
-  --data-urlencode
-  "q29_target_location_flags[]=Multiple local areas"
-
-  # Survey field 17: Business categories contacted (q30_industries_contacted[])
-  --data-urlencode
-  "q30_industries_contacted[]=Healthcare/HMOs/health plans"
-  --data-urlencode
-  "q30_industries_contacted[]=Grocery/retail"
-
-  # Survey field 18: For the business categories you selected above, how often does the agent usually contact them? (q75_industries_contact_frequency)
-  --data-urlencode
-  "q75_industries_contact_frequency=1-2 per week"
-
-  # Survey field 19: Categories hardest to contact (q31_top_bottleneck_industries[])
-  --data-urlencode
-  "q31_top_bottleneck_industries[]=Healthcare/HMOs/health plans"
-  --data-urlencode
-  "q31_top_bottleneck_industries[]=Grocery/retail"
-
-  # Survey field 20: Services agents try to access (q32_services_tried[])
-  --data-urlencode
-  "q32_services_tried[]=Appointments"
-  --data-urlencode
-  "q32_services_tried[]=Customer support"
-
-  # Survey field 21: For the services you selected above, how often does the agent usually try to access them? (q76_services_tried_frequency)
-  --data-urlencode
-  "q76_services_tried_frequency=3-6 per week"
-
-  # Survey field 22: Goods agents find, compare, or purchase (q33_goods_tried[])
-  --data-urlencode
-  "q33_goods_tried[]=Groceries"
-
-  # Survey field 23: For the goods you selected above, how often does the agent usually find, compare, or purchase them? (q77_goods_tried_frequency)
-  --data-urlencode
-  "q77_goods_tried_frequency=1-3 per month"
-
-  # Survey field 24: Where purchasing gets difficult (q34_purchasing_difficulty_factors[])
-  --data-urlencode
-  "q34_purchasing_difficulty_factors[]=Prices"
-  --data-urlencode
-  "q34_purchasing_difficulty_factors[]=Checkout"
-
-  # Survey field 25: Technical issues/failure modes (q35_technical_issues[])
-  --data-urlencode
-  "q35_technical_issues[]=CAPTCHA/human verification"
-  --data-urlencode
-  "q35_technical_issues[]=No API/MCP/structured endpoint"
-
-  # Survey field 26: Biggest bottlenecks (q36_top_bottleneck_reasons[])
-  --data-urlencode
-  "q36_top_bottleneck_reasons[]=No structured API/MCP/CLI"
-  --data-urlencode
-  "q36_top_bottleneck_reasons[]=Phone-only contact"
-
-  # Survey field 27: Overall bottleneck frequency (q37_bottleneck_frequency_overall)
-  --data-urlencode
-  "q37_bottleneck_frequency_overall=Often"
-
-  # Survey field 28: Frequency by bottleneck type (free-text or structured summary) (q38_bottleneck_frequency_matrix)
-  --data-urlencode
-  "q38_bottleneck_frequency_matrix=Example: CAPTCHA often; phone-only sometimes; no API often."
-
-  # Survey field 29: Simplest ways to connect (q39_simplest_connection_methods[])
-  --data-urlencode
-  "q39_simplest_connection_methods[]=MCP server"
-  --data-urlencode
-  "q39_simplest_connection_methods[]=Public API"
-  --data-urlencode
-  "q39_simplest_connection_methods[]=HTTP POST/cURL (form-encoded)"
-  --data-urlencode
-  "q39_simplest_connection_methods[]=Programmatic form submission"
-
-  # Survey field 30: Contact channels working best today (q40_best_contact_channels[])
-  --data-urlencode
-  "q40_best_contact_channels[]=Email"
-  --data-urlencode
-  "q40_best_contact_channels[]=Structured web form"
-  --data-urlencode
-  "q40_best_contact_channels[]=HTTP POST/cURL (form-encoded)"
-
-  # Survey field 31: Contact channels working worst today (q41_worst_contact_channels[])
-  --data-urlencode
-  "q41_worst_contact_channels[]=Phone"
-  --data-urlencode
-  "q41_worst_contact_channels[]=Email"
-
-  # Survey field 32: Where agents search first (q42_search_first_sources[])
-  --data-urlencode
-  "q42_search_first_sources[]=Business website"
-  --data-urlencode
-  "q42_search_first_sources[]=Search engine"
-
-  # Survey field 33: Where agents search if first source is not enough (q43_search_fallback_sources[])
-  --data-urlencode
-  "q43_search_fallback_sources[]=Phone/email"
-
-  # Survey field 34: How often ease of contact influences choice (q44_purchase_decision_influenced_by_contact_ease)
-  --data-urlencode
-  "q44_purchase_decision_influenced_by_contact_ease=Often"
-
-  # Survey field 35: Have you ever chosen a different business/provider because the preferred one was too hard for an agent to contact, book, buy from, or use? (q45_selected_different_business_due_to_access)
-  --data-urlencode
-  "q45_selected_different_business_due_to_access=Yes sometimes"
-
-  # Survey field 36: Factors causing one business to be chosen (q46_provider_choice_factors[])
-  --data-urlencode
-  "q46_provider_choice_factors[]=Easier contact"
-  --data-urlencode
-  "q46_provider_choice_factors[]=API support"
-
-  # Survey field 37: Do businesses make AI-agent permissions clear? (q47_agent_policy_clarity)
-  --data-urlencode
-  "q47_agent_policy_clarity=Rarely"
-
-  # Survey field 38: Most useful permission model (q48_useful_permission_model[])
-  --data-urlencode
-  "q48_useful_permission_model[]=OAuth/delegated auth"
-  --data-urlencode
-  "q48_useful_permission_model[]=MCP auth"
-
-  # Survey field 39: Verification methods easiest to support (q49_easiest_verification_methods[])
-  --data-urlencode
-  "q49_easiest_verification_methods[]=OAuth/delegated auth"
-  --data-urlencode
-  "q49_easiest_verification_methods[]=Email/SMS confirmation"
-
-  # Survey field 40: Percentage of tasks usually completed successfully (q50_task_success_percentage)
-  --data-urlencode
-  "q50_task_success_percentage=41-60"
-
-  # Survey field 41: When it fails, what usually happens? (q51_failure_outcomes[])
-  --data-urlencode
-  "q51_failure_outcomes[]=Human handoff"
-  --data-urlencode
-  "q51_failure_outcomes[]=Different provider"
-
-  # Survey field 42: What would improve success rate? (q52_success_rate_improvements[])
-  --data-urlencode
-  "q52_success_rate_improvements[]=MCP support"
-  --data-urlencode
-  "q52_success_rate_improvements[]=APIs"
-
-  # Survey field 43: Overall difficulty connecting with businesses (q53_overall_difficulty_rating)
-  --data-urlencode
-  "q53_overall_difficulty_rating=4"
-
-  # Survey field 44: Overall frequency of preventing/delaying bottlenecks (q54_overall_bottleneck_frequency_rating)
-  --data-urlencode
-  "q54_overall_bottleneck_frequency_rating=4"
-
-  # Survey field 45: Severity by bottleneck type (free-text or structured summary) (q55_bottleneck_severity_matrix)
-  --data-urlencode
-  "q55_bottleneck_severity_matrix=Example: no structured endpoint 5; CAPTCHA 4; slow response 3."
-
-  # Survey field 46: Priority industry rank 1 (q56_priority_industry_rank_1)
-  --data-urlencode
-  "q56_priority_industry_rank_1=Healthcare/HMOs/health plans"
-
-  # Survey field 47: Priority industry rank 2 (q57_priority_industry_rank_2)
-  --data-urlencode
-  "q57_priority_industry_rank_2=Government/public services"
-
-  # Survey field 48: Priority industry rank 3 (q58_priority_industry_rank_3)
-  --data-urlencode
-  "q58_priority_industry_rank_3=Grocery/retail"
-
-  # Survey field 49: Divide 100 points across improvement areas based on how much each would improve agent success (q59_improvement_point_allocation)
-  --data-urlencode
-  "q59_improvement_point_allocation=MCP/API/CLI 35; better discovery 15; booking/checkout 20; reliability 10; trust/verification 10; stronger model/more context 10."
-
-  # Survey field 50: How AI-agent-ready are businesses today? (q60_agent_ready_rating)
-  --data-urlencode
-  "q60_agent_ready_rating=2"
-
-  # Survey field 51: Industries with the greatest contact/access bottlenecks (q61_greatest_bottleneck_industries_q42a[])
-  --data-urlencode
-  "q61_greatest_bottleneck_industries_q42a[]=Healthcare/HMOs/health plans"
-  --data-urlencode
-  "q61_greatest_bottleneck_industries_q42a[]=Government/public services"
-
-  # Survey field 52: Most serious bottleneck industry - rank 1 (q62_serious_bottleneck_industry_rank_q42b_1)
-  --data-urlencode
-  "q62_serious_bottleneck_industry_rank_q42b_1=Healthcare/HMOs/health plans"
-
-  # Survey field 53: Most serious bottleneck industry - rank 2 (q63_serious_bottleneck_industry_rank_q42b_2)
-  --data-urlencode
-  "q63_serious_bottleneck_industry_rank_q42b_2=Government/public services"
-
-  # Survey field 54: Most serious bottleneck industry - rank 3 (q64_serious_bottleneck_industry_rank_q42b_3)
-  --data-urlencode
-  "q64_serious_bottleneck_industry_rank_q42b_3=Grocery/retail"
-
-  # Survey field 55: Main reason the top-ranked industry is difficult (q65_top_ranked_industry_reason_q42c[])
-  --data-urlencode
-  "q65_top_ranked_industry_reason_q42c[]=No structured API/MCP/CLI"
-  --data-urlencode
-  "q65_top_ranked_industry_reason_q42c[]=CAPTCHA/human-only verification"
-
-  # Survey field 56: Single biggest improvement businesses or platforms could make for agent success (q66_single_biggest_improvement)
-  --data-urlencode
-  "q66_single_biggest_improvement=MCP server support"
-
-  # Survey field 57: Where did you find this survey? (q67_self_reported_source)
-  --data-urlencode
-  "q67_self_reported_source=GitHub"
-
-  # Survey field 58: Additional use cases/workflows (q71_open_comment_additional_use_cases)
-  --data-urlencode
-  "q71_open_comment_additional_use_cases=Optional sanitized note."
-
-  # Survey field 59: Common or frustrating situation (q72_open_comment_frustrating_situation)
-  --data-urlencode
-  "q72_open_comment_frustrating_situation=Optional sanitized example with no private data."
-
-  # Survey field 60: What should businesses/platforms change? (q73_open_comment_business_changes)
-  --data-urlencode
-  "q73_open_comment_business_changes=Optional recommendation."
-
-  # Survey field 61: Additional survey comments (q74_open_comment_survey_feedback)
-  --data-urlencode
-  "q74_open_comment_survey_feedback=Optional survey feedback."
-
-  # Survey field 62: Separate optional follow-up questionnaire: may we contact you? (q69_follow_up_consent)
-  --data-urlencode
-  "q69_follow_up_consent=No"
-
-  # Survey field 63: Separate optional follow-up questionnaire: contact info (optional) (q70_optional_follow_up_contact)
-  --data-urlencode
-  "q70_optional_follow_up_contact="
+  --data-urlencode "formID=${FORM_ID}"
+  --data-urlencode "submitSource=public_curl"
+  --data-urlencode "submitDate=undefined"
+  --data-urlencode "uploadServerUrl=https://upload.jotform.com/upload"
+  --data-urlencode "eventObserver=1"
+  --data-urlencode "website="
+  --data-urlencode "simple_spc=${FORM_ID}-${FORM_ID}"
+
+  --data-urlencode "${SURVEY_VERSION}=v1.0"
+  --data-urlencode "${SUBMITTED_VIA}=public_curl"
+  --data-urlencode "${TRACKED_SOURCE}=github_readme"
+  --data-urlencode "${TRACKED_MEDIUM}=github"
+  --data-urlencode "${TRACKED_CAMPAIGN}=agent_valve_survey_v1"
+  --data-urlencode "${TRACKED_CHANNEL}=public_repo"
+  --data-urlencode "${TRACKED_COMMUNITY}="
+  --data-urlencode "${TRACKED_LINK_ID}=readme_direct_curl"
+  --data-urlencode "${LANDING_PAGE_URL}=${REPO_URL}"
+
+  --data-urlencode "${AGENT_TYPE}[]=OpenClaw agent"
+  --data-urlencode "${AGENT_TYPE}[]=Claude Code agent"
+  --data-urlencode "${AGENT_PLATFORM}[]=API calls"
+  --data-urlencode "${AGENT_PLATFORM}[]=MCP client"
+  --data-urlencode "${AGENT_PLATFORM}[]=MCP server"
+  --data-urlencode "${ACTS_ON_BEHALF_OF}[]=User"
+  --data-urlencode "${RUNTIME_DEVICE_TYPE}[]=Cloud VPS"
+  --data-urlencode "${RUNTIME_DEVICE_TYPE}[]=Windows mini PC"
+  --data-urlencode "${RELIABLE_ACCESS_METHODS}[]=Visible web browser"
+  --data-urlencode "${RELIABLE_ACCESS_METHODS}[]=HTTP POST / cURL"
+  --data-urlencode "${RELIABLE_ACCESS_METHODS}[]=MCP client"
+  --data-urlencode "${BUSINESS_CONTACT_FREQUENCY}=Weekly"
+  --data-urlencode "${AUTONOMY_LEVEL}=Partial autonomy"
+  --data-urlencode "${COMMON_USE_CASES}[]=Appointment scheduling"
+  --data-urlencode "${COMMON_USE_CASES}[]=Customer support"
+  --data-urlencode "${OTHER_COMMON_USE_CASE}="
+  --data-urlencode "${TOP_COMMON_USE_CASE_1}=Appointment scheduling"
+  --data-urlencode "${TOP_COMMON_USE_CASE_2}=Customer support"
+  --data-urlencode "${TOP_COMMON_USE_CASE_3}=Purchasing or ordering goods"
+  --data-urlencode "${LLM_MODELS_USED}[]=OpenAI GPT family"
+  --data-urlencode "${LLM_MODELS_USED}[]=Anthropic Claude family"
+  --data-urlencode "${EXACT_LLM_MODEL_NAMES}=Example model family/version if known"
+  --data-urlencode "${OWNER_LOCATIONS}=Country/region/city or metro only; no exact street address"
+  --data-urlencode "${OWNER_LOCATION_FLAGS}[]=One primary location"
+  --data-urlencode "${TARGET_BUSINESS_LOCATIONS}=Country/region/city/service area; no private address"
+  --data-urlencode "${TARGET_LOCATION_FLAGS}[]=Multiple local areas"
+  --data-urlencode "${INDUSTRIES_CONTACTED}[]=Healthcare/HMOs/health plans"
+  --data-urlencode "${INDUSTRIES_CONTACTED}[]=Grocery/retail"
+  --data-urlencode "${INDUSTRIES_CONTACT_FREQUENCY}=1-2 per week"
+  --data-urlencode "${TOP_BOTTLENECK_INDUSTRIES}[]=Healthcare/HMOs/health plans"
+  --data-urlencode "${TOP_BOTTLENECK_INDUSTRIES}[]=Grocery/retail"
+  --data-urlencode "${SERVICES_TRIED}[]=Appointments"
+  --data-urlencode "${SERVICES_TRIED}[]=Customer support"
+  --data-urlencode "${SERVICES_TRIED_FREQUENCY}=3-6 per week"
+  --data-urlencode "${GOODS_TRIED}[]=Groceries"
+  --data-urlencode "${GOODS_TRIED_FREQUENCY}=1-3 per month"
+  --data-urlencode "${PURCHASING_DIFFICULTY_FACTORS}[]=Prices"
+  --data-urlencode "${PURCHASING_DIFFICULTY_FACTORS}[]=Checkout"
+  --data-urlencode "${TECHNICAL_ISSUES}[]=CAPTCHA/human verification"
+  --data-urlencode "${TECHNICAL_ISSUES}[]=2FA that the agent cannot complete"
+  --data-urlencode "${TECHNICAL_ISSUES}[]=No API/MCP/structured endpoint"
+  --data-urlencode "${TOP_BOTTLENECK_REASONS}[]=No structured API/MCP/CLI"
+  --data-urlencode "${TOP_BOTTLENECK_REASONS}[]=2FA barriers"
+  --data-urlencode "${TOP_BOTTLENECK_REASONS}[]=Phone-only contact"
+  --data-urlencode "${BOTTLENECK_FREQUENCY_OVERALL}=Often"
+  --data-urlencode "${BOTTLENECK_FREQUENCY_MATRIX}=Example: CAPTCHA often; phone-only sometimes; no API often."
+  --data-urlencode "${SIMPLEST_CONNECTION_METHODS}[]=MCP server"
+  --data-urlencode "${SIMPLEST_CONNECTION_METHODS}[]=Public API"
+  --data-urlencode "${SIMPLEST_CONNECTION_METHODS}[]=HTTP POST/cURL (form-encoded)"
+  --data-urlencode "${SIMPLEST_CONNECTION_METHODS}[]=Programmatic form submission"
+  --data-urlencode "${BEST_CONTACT_CHANNELS}[]=Email"
+  --data-urlencode "${BEST_CONTACT_CHANNELS}[]=Structured web form"
+  --data-urlencode "${BEST_CONTACT_CHANNELS}[]=HTTP POST/cURL (form-encoded)"
+  --data-urlencode "${WORST_CONTACT_CHANNELS}[]=Phone"
+  --data-urlencode "${WORST_CONTACT_CHANNELS}[]=Email"
+  --data-urlencode "${SEARCH_FIRST_SOURCES}[]=Business website"
+  --data-urlencode "${SEARCH_FIRST_SOURCES}[]=Search engine"
+  --data-urlencode "${SEARCH_FALLBACK_SOURCES}[]=Phone/email"
+  --data-urlencode "${PURCHASE_DECISION_INFLUENCED}=Often"
+  --data-urlencode "${SELECTED_DIFFERENT_BUSINESS}=Yes sometimes"
+  --data-urlencode "${PROVIDER_CHOICE_FACTORS}[]=Easier contact"
+  --data-urlencode "${PROVIDER_CHOICE_FACTORS}[]=API support"
+  --data-urlencode "${AGENT_POLICY_CLARITY}=Rarely"
+  --data-urlencode "${USEFUL_PERMISSION_MODEL}[]=OAuth"
+  --data-urlencode "${USEFUL_PERMISSION_MODEL}[]=Delegated auth"
+  --data-urlencode "${USEFUL_PERMISSION_MODEL}[]=MCP auth"
+  --data-urlencode "${EASIEST_VERIFICATION_METHODS}[]=OAuth"
+  --data-urlencode "${EASIEST_VERIFICATION_METHODS}[]=Delegated auth"
+  --data-urlencode "${EASIEST_VERIFICATION_METHODS}[]=Email confirmation"
+  --data-urlencode "${EASIEST_VERIFICATION_METHODS}[]=SMS confirmation"
+  --data-urlencode "${SECURITY_SAFETY_BLOCKERS}[]=CAPTCHA"
+  --data-urlencode "${SECURITY_SAFETY_BLOCKERS}[]=2FA that the agent cannot complete"
+  --data-urlencode "${SECURITY_SAFETY_BLOCKERS}[other]="
+  --data-urlencode "${CAUTION_RISK_CONCERNS}[]=Prompt injection in page content"
+  --data-urlencode "${CAUTION_RISK_CONCERNS}[]=Credential leakage"
+  --data-urlencode "${CAUTION_RISK_CONCERNS}[other]="
+  --data-urlencode "${SENSITIVE_ACTION_APPROVAL_MODEL}[]=User confirmation before purchases"
+  --data-urlencode "${SENSITIVE_ACTION_APPROVAL_MODEL}[]=Signed request"
+  --data-urlencode "${SENSITIVE_ACTION_APPROVAL_MODEL}[]=Verified account"
+  --data-urlencode "${SENSITIVE_ACTION_APPROVAL_MODEL}[]=Agent registry"
+  --data-urlencode "${SENSITIVE_ACTION_APPROVAL_MODEL}[other]="
+  --data-urlencode "${BUSINESS_SAFETY_MEASURES}[]=Delegated auth with scoped permissions"
+  --data-urlencode "${BUSINESS_SAFETY_MEASURES}[]=Prompt-injection-resistant APIs"
+  --data-urlencode "${BUSINESS_SAFETY_MEASURES}[]=Agent registry"
+  --data-urlencode "${BUSINESS_SAFETY_MEASURES}[other]="
+  --data-urlencode "${TASK_SUCCESS_PERCENTAGE}=41-60"
+  --data-urlencode "${FAILURE_OUTCOMES}[]=Human handoff"
+  --data-urlencode "${FAILURE_OUTCOMES}[]=Different provider"
+  --data-urlencode "${SUCCESS_RATE_IMPROVEMENTS}[]=MCP support"
+  --data-urlencode "${SUCCESS_RATE_IMPROVEMENTS}[]=APIs"
+  --data-urlencode "${OVERALL_DIFFICULTY_RATING}=4"
+  --data-urlencode "${OVERALL_BOTTLENECK_FREQUENCY_RATING}=4"
+  --data-urlencode "${BOTTLENECK_SEVERITY_MATRIX}=Example: no structured endpoint 5; CAPTCHA 4; slow response 3."
+  --data-urlencode "${PRIORITY_INDUSTRY_RANK_1}=Healthcare/HMOs/health plans"
+  --data-urlencode "${PRIORITY_INDUSTRY_RANK_2}=Government/public services"
+  --data-urlencode "${PRIORITY_INDUSTRY_RANK_3}=Grocery/retail"
+  --data-urlencode "${IMPROVEMENT_POINT_ALLOCATION}=MCP/API/CLI 35; better discovery 15; booking/checkout 20; reliability 10; trust/verification 10; stronger model/more context 10."
+  --data-urlencode "${AGENT_READY_RATING}=2"
+  --data-urlencode "${GREATEST_BOTTLENECK_INDUSTRIES}[]=Healthcare/HMOs/health plans"
+  --data-urlencode "${GREATEST_BOTTLENECK_INDUSTRIES}[]=Government/public services"
+  --data-urlencode "${SERIOUS_BOTTLENECK_INDUSTRY_RANK_1}=Healthcare/HMOs/health plans"
+  --data-urlencode "${SERIOUS_BOTTLENECK_INDUSTRY_RANK_2}=Government/public services"
+  --data-urlencode "${SERIOUS_BOTTLENECK_INDUSTRY_RANK_3}=Grocery/retail"
+  --data-urlencode "${TOP_RANKED_INDUSTRY_REASON}[]=No structured API/MCP/CLI"
+  --data-urlencode "${TOP_RANKED_INDUSTRY_REASON}[]=CAPTCHA/human-only verification"
+  --data-urlencode "${TOP_RANKED_INDUSTRY_REASON}[]=2FA barriers"
+  --data-urlencode "${SINGLE_BIGGEST_IMPROVEMENT}=MCP server support"
+  --data-urlencode "${SELF_REPORTED_SOURCE}=GitHub"
+  --data-urlencode "${OPEN_COMMENT_ADDITIONAL_USE_CASES}=Optional sanitized note."
+  --data-urlencode "${OPEN_COMMENT_FRUSTRATING_SITUATION}=Optional sanitized example with no private data."
+  --data-urlencode "${OPEN_COMMENT_BUSINESS_CHANGES}=Optional recommendation."
+  --data-urlencode "${OPEN_COMMENT_SURVEY_FEEDBACK}=Optional survey feedback."
+  --data-urlencode "${FOLLOW_UP_CONSENT}=No"
+  --data-urlencode "${OPTIONAL_FOLLOW_UP_CONTACT}="
 )
 
 curl "${curl_args[@]}"
+
+
