@@ -1,10 +1,30 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Pass a source-specific GitHub URL via REPO_URL or as the first argument.
+# Tracking values belong in that URL query before any # anchor.
+
 FORM_ID="261483634936466"
 FORM_URL="https://form.jotform.com/${FORM_ID}"
 SUBMIT_URL="https://submit.jotform.com/submit/${FORM_ID}"
-REPO_URL="https://github.com/agent-valve-ai/Agent-Valve"
+REPO_URL="${REPO_URL:-${1:-https://github.com/agent-valve-ai/Agent-Valve?tracked_source=github_readme&tracked_medium=github&tracked_campaign=agent_valve_survey_v1&tracked_link_id=github_readme_direct#direct-jotform-curl-submission}}"
+
+url_param() {
+  local key="$1"
+  local query="${REPO_URL#*[?]}"
+  query="${query%%#*}"
+  printf '%s\n' "$query" | tr '&' '\n' | sed -nE "s/^${key}=//p" | head -n 1
+}
+
+TRACKED_SOURCE_VALUE="$(url_param tracked_source)"
+TRACKED_MEDIUM_VALUE="$(url_param tracked_medium)"
+TRACKED_CAMPAIGN_VALUE="$(url_param tracked_campaign)"
+TRACKED_LINK_ID_VALUE="$(url_param tracked_link_id)"
+
+: "${TRACKED_SOURCE_VALUE:=github_readme}"
+: "${TRACKED_MEDIUM_VALUE:=github}"
+: "${TRACKED_CAMPAIGN_VALUE:=agent_valve_survey_v1}"
+: "${TRACKED_LINK_ID_VALUE:=github_readme_direct}"
 
 form_html="$(curl -fsSL "$FORM_URL")"
 
@@ -14,8 +34,8 @@ field_name_nth() {
   local raw
   raw="$(
     printf '%s' "$form_html" |
-      tr '>' '\n' |
-      sed -nE 's/.*name="([^"]+)".*/\1/p' |
+      grep -oE 'name="[^"]+"' |
+      sed -nE 's/name="([^"]+)"/\1/p' |
       grep -F "$contains" |
       sed -n "${nth}p"
   )"
@@ -129,12 +149,12 @@ curl_args=(
 
   --data-urlencode "${SURVEY_VERSION}=v1.0"
   --data-urlencode "${SUBMITTED_VIA}=public_curl"
-  --data-urlencode "${TRACKED_SOURCE}=github_readme"
-  --data-urlencode "${TRACKED_MEDIUM}=github"
-  --data-urlencode "${TRACKED_CAMPAIGN}=agent_valve_survey_v1"
+  --data-urlencode "${TRACKED_SOURCE}=${TRACKED_SOURCE_VALUE}"
+  --data-urlencode "${TRACKED_MEDIUM}=${TRACKED_MEDIUM_VALUE}"
+  --data-urlencode "${TRACKED_CAMPAIGN}=${TRACKED_CAMPAIGN_VALUE}"
   --data-urlencode "${TRACKED_CHANNEL}=public_repo"
   --data-urlencode "${TRACKED_COMMUNITY}="
-  --data-urlencode "${TRACKED_LINK_ID}=readme_direct_curl"
+  --data-urlencode "${TRACKED_LINK_ID}=${TRACKED_LINK_ID_VALUE}"
   --data-urlencode "${LANDING_PAGE_URL}=${REPO_URL}"
 
   --data-urlencode "${AGENT_TYPE}[]=OpenClaw agent"
@@ -183,17 +203,19 @@ curl_args=(
   --data-urlencode "${TOP_BOTTLENECK_REASONS}[]=Phone-only contact"
   --data-urlencode "${BOTTLENECK_FREQUENCY_OVERALL}=Often"
   --data-urlencode "${BOTTLENECK_FREQUENCY_MATRIX}=Example: CAPTCHA often; phone-only sometimes; no API often."
-  --data-urlencode "${SIMPLEST_CONNECTION_METHODS}[]=MCP server"
-  --data-urlencode "${SIMPLEST_CONNECTION_METHODS}[]=Public API"
+  --data-urlencode "${SIMPLEST_CONNECTION_METHODS}[]=MCP endpoint"
+  --data-urlencode "${SIMPLEST_CONNECTION_METHODS}[]=Agent-readable API"
   --data-urlencode "${SIMPLEST_CONNECTION_METHODS}[]=HTTP POST/cURL (form-encoded)"
-  --data-urlencode "${SIMPLEST_CONNECTION_METHODS}[]=Programmatic form submission"
+  --data-urlencode "${SIMPLEST_CONNECTION_METHODS}[]=Agent-friendly form submission"
+  --data-urlencode "${SIMPLEST_CONNECTION_METHODS}[]=Machine-readable status/result updates"
   --data-urlencode "${BEST_CONTACT_CHANNELS}[]=Email"
   --data-urlencode "${BEST_CONTACT_CHANNELS}[]=Structured web form"
   --data-urlencode "${BEST_CONTACT_CHANNELS}[]=HTTP POST/cURL (form-encoded)"
   --data-urlencode "${WORST_CONTACT_CHANNELS}[]=Phone"
   --data-urlencode "${WORST_CONTACT_CHANNELS}[]=Email"
-  --data-urlencode "${DISCOVERABILITY_SEARCH_SOURCES}[]=General search engine"
-  --data-urlencode "${DISCOVERABILITY_SEARCH_SOURCES}[]=Accessibility-specific directory"
+  --data-urlencode "${DISCOVERABILITY_SEARCH_SOURCES}[]=Google Search"
+  --data-urlencode "${DISCOVERABILITY_SEARCH_SOURCES}[]=Moltbook community"
+  --data-urlencode "${DISCOVERABILITY_SEARCH_SOURCES}[]=OpenClaw community"
   --data-urlencode "${DISCOVERABILITY_SEARCH_SOURCES}[other]="
   --data-urlencode "${SEARCH_FIRST_SOURCES}[]=Business website"
   --data-urlencode "${SEARCH_FIRST_SOURCES}[]=Search engine"
@@ -215,6 +237,14 @@ curl_args=(
   --data-urlencode "${SECURITY_SAFETY_BLOCKERS}[other]="
   --data-urlencode "${CAUTION_RISK_CONCERNS}[]=Prompt injection in page content"
   --data-urlencode "${CAUTION_RISK_CONCERNS}[]=Credential leakage"
+  --data-urlencode "${CAUTION_RISK_CONCERNS}[]=Concern about connecting payment-card access"
+  --data-urlencode "${CAUTION_RISK_CONCERNS}[]=Concern about connecting bank-account access"
+  --data-urlencode "${CAUTION_RISK_CONCERNS}[]=Concern about connecting email-account access"
+  --data-urlencode "${CAUTION_RISK_CONCERNS}[]=Concern about connecting business account access"
+  --data-urlencode "${CAUTION_RISK_CONCERNS}[]=Do not trust the company requesting access"
+  --data-urlencode "${CAUTION_RISK_CONCERNS}[]=Do not understand why the requested access is needed"
+  --data-urlencode "${CAUTION_RISK_CONCERNS}[]=Fear of unexpected charges"
+  --data-urlencode "${CAUTION_RISK_CONCERNS}[]=Prefer manual entry for sensitive data"
   --data-urlencode "${CAUTION_RISK_CONCERNS}[other]="
   --data-urlencode "${SENSITIVE_ACTION_APPROVAL_MODEL}[]=User confirmation before purchases"
   --data-urlencode "${SENSITIVE_ACTION_APPROVAL_MODEL}[]=Signed request"
@@ -257,5 +287,3 @@ curl_args=(
 )
 
 curl "${curl_args[@]}"
-
-
