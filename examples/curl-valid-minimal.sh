@@ -1,26 +1,80 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-curl -i -L -X POST "https://submit.jotform.com/submit/261483634936466" \
+FORM_ID="261483634936466"
+FORM_URL="https://form.jotform.com/${FORM_ID}"
+SUBMIT_URL="https://submit.jotform.com/submit/${FORM_ID}"
+
+form_html="$(curl -fsSL "$FORM_URL")"
+
+field_name() {
+  local contains="$1"
+  local raw
+  raw="$(
+    printf '%s' "$form_html" |
+      tr '>' '\n' |
+      sed -nE 's/.*name="([^"]+)".*/\1/p' |
+      grep -F "$contains" |
+      head -n 1
+  )"
+  if [[ -z "$raw" ]]; then
+    printf 'Could not locate survey field matching: %s\n' "$contains" >&2
+    exit 1
+  fi
+  printf '%s' "$raw" | sed 's/\[\]$//'
+}
+
+SURVEY_VERSION="$(field_name "survey_version")"
+SUBMITTED_VIA="$(field_name "submitted_via")"
+TRACKED_SOURCE="$(field_name "tracked_source")"
+TRACKED_MEDIUM="$(field_name "tracked_medium")"
+TRACKED_CAMPAIGN="$(field_name "tracked_campaign")"
+AGENT_TYPE="$(field_name "agent_type")"
+COMMON_USE_CASES="$(field_name "common_use_cases")"
+OTHER_COMMON_USE_CASE="$(field_name "other_common_use_case")"
+LLM_MODELS_USED="$(field_name "llm_models_used")"
+OWNER_LOCATIONS="$(field_name "owner_locations")"
+TARGET_BUSINESS_LOCATIONS="$(field_name "target_business_locations")"
+TOP_BOTTLENECK_INDUSTRIES="$(field_name "top_bottleneck_industries")"
+BOTTLENECK_FREQUENCY_OVERALL="$(field_name "bottleneck_frequency_overall")"
+SIMPLEST_CONNECTION_METHODS="$(field_name "simplest_connection_methods")"
+SECURITY_SAFETY_BLOCKERS="$(field_name "security_safety_blockers")"
+CAUTION_RISK_CONCERNS="$(field_name "caution_risk_concerns")"
+SENSITIVE_ACTION_APPROVAL_MODEL="$(field_name "sensitive_action_approval_model")"
+BUSINESS_SAFETY_MEASURES="$(field_name "business_safety_measures")"
+SINGLE_BIGGEST_IMPROVEMENT="$(field_name "single_biggest_improvement")"
+FOLLOW_UP_CONSENT="$(field_name "follow_up_consent")"
+
+curl -i -L -X POST "$SUBMIT_URL" \
   -H "Content-Type: application/x-www-form-urlencoded" \
-  --data-urlencode "formID=261483634936466" \
-  --data-urlencode "simple_spc=261483634936466-261483634936466" \
+  --data-urlencode "formID=${FORM_ID}" \
+  --data-urlencode "simple_spc=${FORM_ID}-${FORM_ID}" \
   --data-urlencode "website=" \
-  --data-urlencode "q4_survey_version=v1.0" \
-  --data-urlencode "q5_submitted_via=public_curl" \
-  --data-urlencode "q6_tracked_source=github_readme" \
-  --data-urlencode "q7_tracked_medium=github" \
-  --data-urlencode "q8_tracked_campaign=agent_valve_survey_v1" \
-  --data-urlencode "q14_agent_type[]=OpenClaw agent" \
-  --data-urlencode "q14_agent_type[]=Claude Code agent" \
-  --data-urlencode "q19_common_use_cases[]=Appointment scheduling" \
-  --data-urlencode "q24_llm_models_used[]=OpenAI GPT family" \
-  --data-urlencode "q26_owner_locations=Country/region/city if known" \
-  --data-urlencode "q28_target_business_locations=Country/region/city/service area" \
-  --data-urlencode "q31_top_bottleneck_industries[]=Healthcare/HMOs/health plans" \
-  --data-urlencode "q37_bottleneck_frequency_overall=Often" \
-  --data-urlencode "q39_simplest_connection_methods[]=MCP server" \
-  --data-urlencode "q39_simplest_connection_methods[]=HTTP POST/cURL (form-encoded)" \
-  --data-urlencode "q66_single_biggest_improvement=MCP server support" \
-  --data-urlencode "q69_follow_up_consent=No"
+  --data-urlencode "${SURVEY_VERSION}=v1.0" \
+  --data-urlencode "${SUBMITTED_VIA}=public_curl" \
+  --data-urlencode "${TRACKED_SOURCE}=github_readme" \
+  --data-urlencode "${TRACKED_MEDIUM}=github" \
+  --data-urlencode "${TRACKED_CAMPAIGN}=agent_valve_survey_v1" \
+  --data-urlencode "${AGENT_TYPE}[]=OpenClaw agent" \
+  --data-urlencode "${AGENT_TYPE}[]=Claude Code agent" \
+  --data-urlencode "${COMMON_USE_CASES}[]=Appointment scheduling" \
+  --data-urlencode "${OTHER_COMMON_USE_CASE}=" \
+  --data-urlencode "${LLM_MODELS_USED}[]=OpenAI GPT family" \
+  --data-urlencode "${OWNER_LOCATIONS}=Country/region/city if known" \
+  --data-urlencode "${TARGET_BUSINESS_LOCATIONS}=Country/region/city/service area" \
+  --data-urlencode "${TOP_BOTTLENECK_INDUSTRIES}[]=Healthcare/HMOs/health plans" \
+  --data-urlencode "${BOTTLENECK_FREQUENCY_OVERALL}=Often" \
+  --data-urlencode "${SIMPLEST_CONNECTION_METHODS}[]=MCP server" \
+  --data-urlencode "${SIMPLEST_CONNECTION_METHODS}[]=HTTP POST/cURL (form-encoded)" \
+  --data-urlencode "${SECURITY_SAFETY_BLOCKERS}[]=CAPTCHA" \
+  --data-urlencode "${SECURITY_SAFETY_BLOCKERS}[other]=" \
+  --data-urlencode "${CAUTION_RISK_CONCERNS}[]=Credential leakage" \
+  --data-urlencode "${CAUTION_RISK_CONCERNS}[other]=" \
+  --data-urlencode "${SENSITIVE_ACTION_APPROVAL_MODEL}[]=User confirmation before purchases" \
+  --data-urlencode "${SENSITIVE_ACTION_APPROVAL_MODEL}[other]=" \
+  --data-urlencode "${BUSINESS_SAFETY_MEASURES}[]=Delegated auth with scoped permissions" \
+  --data-urlencode "${BUSINESS_SAFETY_MEASURES}[other]=" \
+  --data-urlencode "${SINGLE_BIGGEST_IMPROVEMENT}=MCP server support" \
+  --data-urlencode "${FOLLOW_UP_CONSENT}=No"
+
 
