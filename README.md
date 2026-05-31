@@ -193,6 +193,7 @@ BOTTLENECK_FREQUENCY_MATRIX="$(field_name "bottleneck_frequency_matrix")"
 SIMPLEST_CONNECTION_METHODS="$(field_name "simplest_connection_methods")"
 BEST_CONTACT_CHANNELS="$(field_name "best_contact_channels")"
 WORST_CONTACT_CHANNELS="$(field_name "worst_contact_channels")"
+DISCOVERABILITY_SEARCH_SOURCES="$(field_name "discoverability_search_sources")"
 SEARCH_FIRST_SOURCES="$(field_name "search_first_sources")"
 SEARCH_FALLBACK_SOURCES="$(field_name "search_fallback_sources")"
 PURCHASE_DECISION_INFLUENCED="$(field_name "purchase_decision_influenced_by_contact_ease")"
@@ -312,6 +313,9 @@ curl_args=(
   --data-urlencode "${BEST_CONTACT_CHANNELS}[]=HTTP POST/cURL (form-encoded)"
   --data-urlencode "${WORST_CONTACT_CHANNELS}[]=Phone"
   --data-urlencode "${WORST_CONTACT_CHANNELS}[]=Email"
+  --data-urlencode "${DISCOVERABILITY_SEARCH_SOURCES}[]=General search engine"
+  --data-urlencode "${DISCOVERABILITY_SEARCH_SOURCES}[]=Accessibility-specific directory"
+  --data-urlencode "${DISCOVERABILITY_SEARCH_SOURCES}[other]="
   --data-urlencode "${SEARCH_FIRST_SOURCES}[]=Business website"
   --data-urlencode "${SEARCH_FIRST_SOURCES}[]=Search engine"
   --data-urlencode "${SEARCH_FALLBACK_SOURCES}[]=Phone/email"
@@ -425,6 +429,7 @@ Use exact option text for radio and checkbox fields. For checkbox/multi-select q
 | Simplest ways to connect | Yes | Choose all that apply. MCP server; Public API; Agent-specific API; HTTP POST/cURL (form-encoded); Programmatic form submission; CLI; SDK; OpenAPI spec; Structured web form; Email; Live chat; Messaging; Machine-readable data; Marketplace; Booking portal; Procurement portal; Standardized contact page; Directory; Webhook; Voice/phone for agents; Verified gateway; Delegation/human handoff; Other; Unable to determine |
 | Contact channels working best today | No | Choose all that apply. MCP server; Public API; Agent-specific API; HTTP POST/cURL (form-encoded); Programmatic form submission; CLI; SDK; Structured web form; Email; Live chat; Messaging; Phone; Booking portal; Marketplace; Directory; Webhook; Human handoff; Other; Unable to determine |
 | Contact channels working worst today | No | Choose all that apply. MCP server; Public API; Agent-specific API; HTTP POST/cURL (form-encoded); Programmatic form submission; CLI; SDK; Structured web form; Email; Live chat; Messaging; Phone; Booking portal; Marketplace; Directory; Webhook; Human handoff; Other; Unable to determine |
+| Discoverability: where do you search to find accessible products, services, or businesses? | No | Choose all that apply. General search engine; Maps; Local search; Business website; Marketplace; Directory site; Review site; Social media; Accessibility-specific directory; Accessibility statement page; Government registry; Community forum; User-provided link; API docs; MCP registry; Knowledge base; Email history; CRM; Internal data; Other - please specify (optional); Unable to determine |
 | Where agents search first | No | Choose all that apply. Business website; Search engine; Maps/local search; Marketplace/directory; Social profile; API docs; MCP registry; Knowledge base; User-provided link; Email history; CRM/internal data; Other; Unable to determine |
 | Where agents search if first source is not enough | No | Choose all that apply. Business website; Search engine; Maps/local search; Marketplace/directory; Social profile; API docs; MCP registry; Knowledge base; Phone/email; User asks human; Other; Unable to determine |
 | How often ease of contact influences choice | No | Always; Often; Sometimes; Rarely; Never; Unable to determine |
